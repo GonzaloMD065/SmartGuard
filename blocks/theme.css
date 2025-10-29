@@ -1,0 +1,39 @@
+:root {
+  /* Paleta de Colores (Azul, Blanco, Negro) */
+  --color-primary: #0a74da; /* Azul principal */
+  --color-primary-dark: #0056b3; /* Azul más oscuro para hover/active */
+  --color-secondary: #222; /* Negro suave (para texto) */
+  --color-background: #f4f7f6; /* Blanco "hueso" / Gris muy claro */
+  --color-surface: #ffffff; /* Blanco puro (para tarjetas) */
+  --color-text: #333; /* Color de texto principal */
+  --color-text-light: #666; /* Color de texto secundario */
+  --color-border: #e0e0e0; /* Bordes suaves */
+  --color-success: #28a745; /* Verde para éxito */
+  --color-danger: #dc3545; /* Rojo para fallo/alerta */
+  --color-notification: #e44d26; /* Naranja/Rojo para notificaciones */
+
+  /* Sombra */
+  --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Soporte para Modo Oscuro (se activa con preferencia del sistema) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #1e90ff; /* Azul más brillante para modo oscuro */
+    --color-primary-dark: #1c7ed6;
+    --color-secondary: #eee;
+    --color-background: #121212; /* Fondo oscuro */
+    --color-surface: #1e1e1e; /* Superficie de tarjetas oscuras */
+    --color-text: #f1f1f1; /* Texto claro */
+    --color-text-light: #aaa;
+    --color-border: #333;
+  }
+}
+
+/* Reseteo básico y estilos globales */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}

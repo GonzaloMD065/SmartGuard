@@ -1,0 +1,13 @@
+.dashboard__grid {
+  display: grid;
+  gap: 1.5rem;
+  /* Columnas responsivas */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+@media (min-width: 768px) {
+  .card--large {
+    /* El gráfico ocupa 2 columnas en pantallas grandes */
+    grid-column: span 2;
+  }
+}

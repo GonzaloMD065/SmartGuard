@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control de Cerradura</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="header">
+        <div class="header__logo">CerraduraApp 🔒</div>
+
+        <nav class="nav header__nav">
+          <ul class="nav__list">
+            <li class="nav__item">
+              <a
+                href="#dashboard"
+                class="nav__link nav__link--active"
+                data-section="dashboard"
+                >Dashboard</a
+              >
+            </li>
+            <li class="nav__item">
+              <a href="#registros" class="nav__link" data-section="registros"
+                >Registros</a
+              >
+            </li>
+            <li class="nav__item">
+              <a href="#personas" class="nav__link" data-section="personas"
+                >Personas</a
+              >
+            </li>
+          </ul>
+        </nav>
+
+        <div class="notifications header__notifications">
+          <button
+            class="notifications__button"
+            data-action="toggle-notifications"
+          >
+            <span>🔔</span> <span class="notifications__count">3</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="section dashboard" id="dashboard">
+          <h2 class="section__title">Dashboard</h2>
+          <div class="dashboard__grid">
+            <div class="card">
+              <h3 class="card__title">Accesos Hoy</h3>
+              <p class="card__data">12</p>
+            </div>
+            <div class="card">
+              <h3 class="card__title">Fallidos Hoy</h3>
+              <p class="card__data">2</p>
+            </div>
+            <div class="card">
+              <h3 class="card__title">Personas Activas</h3>
+              <p class="card__data">5</p>
+            </div>
+            <div class="card card--large">
+              <h3 class="card__title">Actividad Reciente (Gráfico)</h3>
+              <div class="card__placeholder"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section logs" id="registros">
+          <h2 class="section__title">Registros de Acceso</h2>
+          <div class="table-container">
+            <table class="logs__table">
+              <thead>
+                <tr>
+                  <th>Fecha / Hora</th>
+                  <th>Persona</th>
+                  <th>Estado</th>
+                  <th>Método</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="logs__row">
+                  <td data-label="Fecha">29 Oct 2025, 10:20 AM</td>
+                  <td data-label="Persona">Ana García</td>
+                  <td data-label="Estado">
+                    <span class="status status--success">Exitoso</span>
+                  </td>
+                  <td data-label="Método">Huella</td>
+                </tr>
+                <tr class="logs__row">
+                  <td data-label="Fecha">29 Oct 2025, 09:15 AM</td>
+                  <td data-label="Persona">Desconocido</td>
+                  <td data-label="Estado">
+                    <span class="status status--failed">Fallido</span>
+                  </td>
+                  <td data-label="Método">Huella</td>
+                </tr>
+                <tr class="logs__row">
+                  <td data-label="Fecha">28 Oct 2025, 08:00 PM</td>
+                  <td data-label="Persona">Carlos Ruiz</td>
+                  <td data-label="Estado">
+                    <span class="status status--success">Exitoso</span>
+                  </td>
+                  <td data-label="Método">App Móvil</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section people" id="personas">
+          <h2 class="section__title">Personas Autorizadas</h2>
+          <div class="people__list">
+            <article class="person-card" data-userid="1">
+              <div class="person-card__avatar"></div>
+              <div class="person-card__info">
+                <h3 class="person-card__name">Ana García</h3>
+                <span class="person-card__role">Administrador</span>
+              </div>
+              <div class="person-card__status">
+                <span class="icon" title="Acceso con Huella">🖐️</span>
+              </div>
+            </article>
+
+            <article class="person-card" data-userid="2">
+              <div class="person-card__avatar"></div>
+              <div class="person-card__info">
+                <h3 class="person-card__name">Carlos Ruiz</h3>
+                <span class="person-card__role">Residente</span>
+              </div>
+              <div class="person-card__status">
+                <span class="icon" title="Acceso con Huella">🖐️</span>
+              </div>
+            </article>
+
+            <article class="person-card" data-userid="3">
+              <div
+                class="person-card__avatar person-card__avatar--pending"
+              ></div>
+              <div class="person-card__info">
+                <h3 class="person-card__name">Invitado Temporal</h3>
+                <span class="person-card__role">Vence en 3h</span>
+              </div>
+              <div class="person-card__status">
+                <span class="icon" title="Acceso con App">📱</span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p class="footer__text">
+          © 2025 CerraduraApp. Todos los derechos reservados.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

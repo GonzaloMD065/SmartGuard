@@ -1,0 +1,62 @@
+.people__list {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* --- Tarjeta de Persona (Person Card) --- */
+.person-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--color-surface);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.person-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.person-card__avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  /* Placeholder para imagen de ícono */
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.person-card__avatar--pending {
+  background-color: var(--color-text-light);
+}
+
+.person-card__info {
+  flex-grow: 1;
+}
+
+.person-card__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+.person-card__role {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+}
+
+.person-card__status {
+  margin-left: auto;
+  font-size: 1.5rem;
+}
