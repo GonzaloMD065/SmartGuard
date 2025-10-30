@@ -32,6 +32,14 @@
                 >Personas</a
               >
             </li>
+            <li class="nav__item">
+              <a
+                href="#desbloquear"
+                class="nav__link"
+                data-section="desbloquear"
+                >Desbloquear</a
+              >
+            </li>
           </ul>
         </nav>
 
@@ -147,6 +155,49 @@
                 <span class="icon" title="Acceso con App">📱</span>
               </div>
             </article>
+          </div>
+        </section>
+
+        <section class="section unlock" id="desbloquear">
+          <h2 class="section__title">Desbloqueo Manual</h2>
+          <div class="unlock-keypad">
+            <div class="unlock-keypad__display">
+              <span class="unlock-keypad__digit"></span>
+              <span class="unlock-keypad__digit"></span>
+              <span class="unlock-keypad__digit"></span>
+              <span class="unlock-keypad__digit"></span>
+              <span class="unlock-keypad__digit"></span>
+              <span class="unlock-keypad__digit"></span>
+            </div>
+            <div class="unlock-keypad__grid">
+              <button class="unlock-keypad__button" data-key="1">1</button>
+              <button class="unlock-keypad__button" data-key="2">2</button>
+              <button class="unlock-keypad__button" data-key="3">3</button>
+              <button class="unlock-keypad__button" data-key="4">4</button>
+              <button class="unlock-keypad__button" data-key="5">5</button>
+              <button class="unlock-keypad__button" data-key="6">6</button>
+              <button class="unlock-keypad__button" data-key="7">7</button>
+              <button class="unlock-keypad__button" data-key="8">8</button>
+              <button class="unlock-keypad__button" data-key="9">9</button>
+              <button
+                class="unlock-keypad__button unlock-keypad__button--clear"
+                data-action="clear"
+              >
+                C
+              </button>
+              <button class="unlock-keypad__button" data-key="0">0</button>
+              <button
+                class="unlock-keypad__button unlock-keypad__button--confirm"
+                data-action="confirm"
+              >
+                ↵
+              </button>
+            </div>
+            <div class="unlock-keypad__actions">
+              <button class="button button--primary" data-action="submit-code">
+                Desbloquear
+              </button>
+            </div>
           </div>
         </section>
       </main>

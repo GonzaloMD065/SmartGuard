@@ -1,0 +1,103 @@
+/* ██ BLOQUE: DESBLOQUEO MANUAL (Unlock) ██ */
+
+.unlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el teclado en la sección */
+}
+
+/* --- Teclado (Keypad) --- */
+.unlock-keypad {
+  max-width: 320px; /* Ancho máximo del teclado numérico */
+  width: 100%;
+  padding: 1.5rem;
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--color-border);
+}
+
+/* --- Pantalla/Display del teclado --- */
+.unlock-keypad__display {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+/* --- Dígitos en la pantalla --- */
+.unlock-keypad__digit {
+  width: 20px; /* Ancho para el guion o número */
+  height: 3px; /* Alto del guion */
+  background-color: var(--color-text-light);
+  border-radius: 2px;
+
+  /* (Cuando JS añada un número, se verá diferente) */
+  /* &.unlock-keypad__digit--filled {
+        width: 30px;
+        height: 40px;
+        background-color: transparent;
+        font-size: 2rem;
+        color: var(--color-text);
+        text-align: center;
+    }
+    */
+}
+
+/* --- Rejilla de botones --- */
+.unlock-keypad__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* --- Botón del teclado --- */
+.unlock-keypad__button {
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding: 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  user-select: none; /* Evita seleccionar el texto del botón */
+}
+
+.unlock-keypad__button:hover {
+  background-color: var(--color-border);
+}
+
+.unlock-keypad__button:active {
+  transform: scale(0.95); /* Efecto de presión */
+}
+
+/* --- Modificador: Botón Borrar (Clear) --- */
+.unlock-keypad__button--clear {
+  background-color: #fff6f6; /* Fondo rojizo suave */
+  color: var(--color-danger);
+  font-weight: bold;
+}
+.unlock-keypad__button--clear:hover {
+  background-color: #fddede;
+}
+
+/* --- Modificador: Botón Confirmar --- */
+.unlock-keypad__button--confirm {
+  background-color: #f6fffb; /* Fondo verdoso suave */
+  color: var(--color-success);
+  font-weight: bold;
+}
+.unlock-keypad__button--confirm:hover {
+  background-color: #e0f8eb;
+}
+
+/* --- Contenedor de Acciones (Botón final) --- */
+.unlock-keypad__actions {
+  margin-top: 1.5rem;
+}
