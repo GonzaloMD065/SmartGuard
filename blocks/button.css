@@ -1,8 +1,5 @@
-/* --- Componente Botón (Genérico) --- */
-/* (Este es un nuevo componente reutilizable) */
 .button {
   display: inline-block;
-  width: 100%; /* Ocupa todo el ancho en este contexto */
   padding: 1rem;
   border: none;
   border-radius: 8px;
@@ -11,6 +8,7 @@
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
+  user-select: none; /* Evita seleccionar el texto del botón */
 }
 
 .button--primary {
@@ -23,5 +21,19 @@
 }
 
 .button--primary:active {
+  transform: scale(0.98);
+}
+
+/* Nuevo modificador para botón secundario */
+.button--secondary {
+  background-color: var(--color-secondary-button);
+  color: #ffffff;
+}
+
+.button--secondary:hover {
+  background-color: var(--color-secondary-button-hover);
+}
+
+.button--secondary:active {
   transform: scale(0.98);
 }

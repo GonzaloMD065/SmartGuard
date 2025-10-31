@@ -4,8 +4,22 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+.people__actions {
+  margin-bottom: 1.5rem;
+  display: flex; /* Para centrar o alinear botones */
+  justify-content: flex-end; /* Alinea el botón a la derecha */
+}
+
+/* Asegura que el botón de agregar persona no sea demasiado ancho en desktop */
+.people__actions .button {
+  width: auto;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
 /* --- Tarjeta de Persona (Person Card) --- */
 .person-card {
+  position: relative; /* Importante para posicionar el botón de eliminar */
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -59,4 +73,76 @@
 .person-card__status {
   margin-left: auto;
   font-size: 1.5rem;
+}
+
+/* --- Botón de Acción en la Tarjeta de Persona --- */
+.person-card__action-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none; /* Eliminar fondo predeterminado */
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem; /* Tamaño del ícono */
+  color: var(--color-text-light); /* Color suave */
+  padding: 0.25rem; /* Pequeño padding para área clickeable */
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  line-height: 1; /* Para alinear el ícono */
+}
+
+.person-card__action-button:hover {
+  background-color: var(--color-background);
+  color: var(
+    --color-danger
+  ); /* Resalta el color de peligro al pasar el ratón */
+}
+
+.person-card__action-button--delete {
+  /* Estilos específicos para el botón de eliminar si son necesarios,
+       por ahora el hover con color-danger es suficiente */
+}
+
+/* ... Tus bloques CSS existentes para .unlock, etc. ... */
+
+/* ██ RESPONSIVE DESIGN (MÓVILES) - ACTUALIZADO ██ */
+
+@media (max-width: 768px) {
+  /* ... Tus estilos responsive existentes ... */
+
+  .people__actions {
+    justify-content: center; /* Centra el botón en móvil */
+    margin-bottom: 1rem;
+  }
+
+  .people__actions .button {
+    width: 100%; /* El botón de agregar ocupa todo el ancho en móvil */
+  }
+
+  /* Ajustar el botón de eliminar en la tarjeta personal para móvil */
+  .person-card__action-button {
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 1.3rem;
+  }
+
+  /* Si la tarjeta se expande en móvil, los botones pueden necesitar un ajuste */
+  .person-card {
+    flex-wrap: wrap; /* Permite que el contenido se ajuste */
+    justify-content: center;
+    text-align: center;
+    padding-top: 2.5rem; /* Deja espacio para el botón de eliminar arriba */
+  }
+  .person-card__info {
+    flex-basis: 100%; /* Info ocupa todo el ancho */
+    margin-top: 0.5rem;
+  }
+  .person-card__avatar {
+    margin-bottom: 0.5rem;
+  }
+  .person-card__status {
+    position: static; /* Coloca el icono de estado de nuevo en el flujo */
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
 }

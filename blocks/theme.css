@@ -15,6 +15,9 @@
   /* Sombra */
   --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  --color-secondary-button: #6c757d; /* Gris para botones secundarios */
+  --color-secondary-button-hover: #5a6268;
 }
 
 /* Soporte para Modo Oscuro (se activa con preferencia del sistema) */
@@ -28,6 +31,8 @@
     --color-text: #f1f1f1; /* Texto claro */
     --color-text-light: #aaa;
     --color-border: #333;
+    --color-secondary-button: #8d959e;
+    --color-secondary-button-hover: #a1aab3;
   }
 }
 
