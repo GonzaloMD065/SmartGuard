@@ -22,6 +22,16 @@ const logoutButton = document.getElementById("logout-button");
 const allSections = document.querySelectorAll(".section");
 const navLinks = document.querySelectorAll(".nav__link");
 
+const personModal = document.getElementById("person-modal");
+const closeModalButton = document.getElementById("close-modal-button");
+const personForm = document.getElementById("person-form");
+const modalTitle = document.getElementById("modal-title");
+const modalSubmitButton = document.getElementById("modal-submit-button");
+const personIdInput = document.getElementById("person-id");
+const personNombreInput = document.getElementById("person-nombre");
+const personRolInput = document.getElementById("person-rol");
+const personFingerprintInput = document.getElementById("person-fingerprint");
+
 // 1.5 Manejo de la sesión
 supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
@@ -97,6 +107,44 @@ navLinks.forEach((link) => {
 const peopleList = document.getElementById("people-list");
 const addPersonButton = document.getElementById("add-person-button");
 
+function openPersonModal(person = null) {
+  personForm.reset(); // Limpia el formulario
+
+  if (person) {
+    // MODO EDITAR
+    modalTitle.textContent = "Editar Persona";
+    modalSubmitButton.textContent = "Guardar Cambios";
+    personIdInput.value = person.id; // ¡Importante!
+    personNombreInput.value = person.nombre;
+    personRolInput.value = person.rol;
+    personFingerprintInput.value = person.fingerprint_id;
+    personFingerprintInput.readOnly = true; // No se puede editar el ID de huella
+    personFingerprintInput.style.backgroundColor = "var(--color-border)";
+  } else {
+    // MODO AGREGAR
+    modalTitle.textContent = "Agregar Persona";
+    modalSubmitButton.textContent = "Guardar";
+    personIdInput.value = ""; // Nos aseguramos que esté vacío
+    personFingerprintInput.readOnly = false;
+    personFingerprintInput.style.backgroundColor = "var(--color-background)";
+  }
+
+  personModal.classList.add("modal--visible");
+}
+
+function closePersonModal() {
+  personModal.classList.remove("modal--visible");
+}
+
+// Event Listeners para cerrar el modal
+closeModalButton.addEventListener("click", closePersonModal);
+personModal.addEventListener("click", (e) => {
+  // Cierra el modal si se hace clic en el fondo (overlay)
+  if (e.target === personModal) {
+    closePersonModal();
+  }
+});
+
 // 3.1 Cargar y mostrar personas
 async function loadPersonas() {
   const { data: personas, error } = await supabase.from("personas").select("*");
@@ -112,24 +160,33 @@ async function loadPersonas() {
   // Pinta cada persona en la lista
   personas.forEach((persona) => {
     const cardHTML = `
-            <article class="person-card" data-userid="${persona.id}">
-                <div class="person-card__avatar"></div>
-                <div class="person-card__info">
-                    <h3 class="person-card__name">${persona.nombre}</h3>
-                    <span class="person-card__role">${
-                      persona.rol
-                    } (Huella ID: ${persona.fingerprint_id || "N/A"})</span>
-                </div>
-                <div class="person-card__status">
-                    <span class="icon" title="Acceso con Huella">🖐️</span>
-                </div>
-                <button class="person-card__action-button person-card__action-button--delete" data-id="${
-                  persona.id
-                }">
-                    🗑️
-                </button>
-            </article>
-        `;
+ <article class="person-card" data-userid="${persona.id}">
+ <div class="person-card__avatar"></div>
+ <div class="person-card__info">
+ <h3 class="person-card__name">${persona.nombre}</h3>
+ <span class="person-card__role">${persona.rol} (Huella ID: ${
+      persona.fingerprint_id || "N/A"
+    })</span>
+ </div>
+
+        <div class="person-card__actions">
+     <div class="person-card__status">
+     <span class="icon" title="Acceso con Huella">🖐️</span>
+     </div>
+     
+     <button class="person-card__action-button person-card__action-button--edit" data-id="${
+       persona.id
+     }">
+     ✏️
+     </button>
+     <button class="person-card__action-button person-card__action-button--delete" data-id="${
+       persona.id
+     }">
+     🗑️
+     </button>
+        </div>
+ </article>
+`;
     peopleList.innerHTML += cardHTML;
   });
 
@@ -142,6 +199,19 @@ async function loadPersonas() {
         // Pedir confirmación antes de borrar
         if (confirm("¿Estás seguro de que quieres eliminar a esta persona?")) {
           deletePerson(id);
+        }
+      });
+    });
+
+  document
+    .querySelectorAll(".person-card__action-button--edit")
+    .forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const id = e.currentTarget.dataset.id;
+        // Buscamos el objeto 'persona' completo en nuestro array de 'personas'
+        const personToEdit = personas.find((p) => p.id === id);
+        if (personToEdit) {
+          openPersonModal(personToEdit);
         }
       });
     });
@@ -161,33 +231,51 @@ async function deletePerson(id) {
 }
 
 // 3.3 Añadir una persona
-addPersonButton.addEventListener("click", async () => {
-  const nombre = prompt("Nombre de la nueva persona:");
-  if (!nombre) return; // Si el usuario cancela
+addPersonButton.addEventListener("click", () => {
+  openPersonModal(null); // <-- Esta es su ÚNICA función
+});
 
-  const rol = prompt("Rol (Ej: Residente, Administrador):", "Residente");
-  if (!rol) return;
+// 3.4 Manejador para Guardar (Agregar o Editar)
+personForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  // ¡Importante! Este ID debe ser el que te da el sensor AS680
-  const fingerprint_id_str = prompt(
-    "ID de la huella (dado por el sensor AS680):"
-  );
-  if (!fingerprint_id_str) return;
+  const id = personIdInput.value;
+  const nombre = personNombreInput.value;
+  const rol = personRolInput.value;
+  const fingerprint_id = parseInt(personFingerprintInput.value);
 
-  const fingerprint_id = parseInt(fingerprint_id_str);
+  if (id) {
+    // --- LÓGICA DE ACTUALIZAR (EDITAR) ---
+    // Solo actualizamos nombre y rol, el ID de huella no se cambia
+    const { error } = await supabase
+      .from("personas")
+      .update({ nombre: nombre, rol: rol })
+      .eq("id", id);
 
-  const { error } = await supabase.from("personas").insert({
-    nombre: nombre,
-    rol: rol,
-    fingerprint_id: fingerprint_id,
-  });
-
-  if (error) {
-    console.error("Error al añadir persona:", error);
-    alert(`Error: ${error.message}`);
+    if (error) {
+      console.error("Error al actualizar persona:", error);
+      alert(`Error: ${error.message}`);
+    } else {
+      alert("Persona actualizada.");
+      closePersonModal();
+      loadPersonas(); // Recarga la lista
+    }
   } else {
-    alert("Persona añadida.");
-    loadPersonas(); // Recarga la lista
+    // --- LÓGICA DE INSERTAR (AGREGAR) ---
+    const { error } = await supabase.from("personas").insert({
+      nombre: nombre,
+      rol: rol,
+      fingerprint_id: fingerprint_id,
+    });
+
+    if (error) {
+      console.error("Error al añadir persona:", error);
+      alert(`Error: ${error.message}`);
+    } else {
+      alert("Persona añadida.");
+      closePersonModal();
+      loadPersonas(); // Recarga la lista
+    }
   }
 });
 

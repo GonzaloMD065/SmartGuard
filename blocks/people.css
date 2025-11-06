@@ -19,15 +19,14 @@
 
 /* --- Tarjeta de Persona (Person Card) --- */
 .person-card {
-  position: relative; /* Importante para posicionar el botón de eliminar */
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Clave: info a la izq, acciones a la der */
   gap: 1rem;
   background-color: var(--color-surface);
   padding: 1rem;
   border-radius: 8px;
   box-shadow: var(--shadow-medium);
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .person-card:hover {
@@ -69,26 +68,30 @@
   font-size: 0.9rem;
   color: var(--color-text-light);
 }
+.person-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Espacio entre los 3 iconos */
+  flex-shrink: 0; /* Evita que los botones se encojan */
+}
 
-.person-card__status {
-  margin-left: auto;
+.person-card__status .icon {
   font-size: 1.5rem;
+  /* (Cualquier otro estilo que tuvieras para el ícono de huella) */
 }
 
 /* --- Botón de Acción en la Tarjeta de Persona --- */
 .person-card__action-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: none; /* Eliminar fondo predeterminado */
+  background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem; /* Tamaño del ícono */
-  color: var(--color-text-light); /* Color suave */
-  padding: 0.25rem; /* Pequeño padding para área clickeable */
+  font-size: 1.2rem;
+  color: var(--color-text-light);
+  padding: 0.25rem;
   border-radius: 4px;
   transition: background-color 0.2s, color 0.2s;
-  line-height: 1; /* Para alinear el ícono */
+  line-height: 1;
+  /* IMPORTANTE: Asegúrate de que no tenga 'position: absolute' */
 }
 
 .person-card__action-button:hover {
@@ -103,46 +106,26 @@
        por ahora el hover con color-danger es suficiente */
 }
 
+.person-card__action-button--delete:hover {
+  color: var(--color-danger); /* Rojo */
+}
+
 /* ... Tus bloques CSS existentes para .unlock, etc. ... */
 
-/* ██ RESPONSIVE DESIGN (MÓVILES) - ACTUALIZADO ██ */
+/* ██ RESPONSIVE DESIGN (MÓVILES) - CORREGIDO ██ */
 
 @media (max-width: 768px) {
-  /* ... Tus estilos responsive existentes ... */
-
+  /* --- ESTO SÍ LO QUEREMOS EN MÓVIL --- */
   .people__actions {
-    justify-content: center; /* Centra el botón en móvil */
+    justify-content: center; /* Centra el botón "Agregar Persona" */
     margin-bottom: 1rem;
   }
 
   .people__actions .button {
-    width: 100%; /* El botón de agregar ocupa todo el ancho en móvil */
+    width: 100%; /* El botón "Agregar Persona" ocupa todo el ancho */
   }
 
-  /* Ajustar el botón de eliminar en la tarjeta personal para móvil */
-  .person-card__action-button {
-    top: 0.75rem;
-    right: 0.75rem;
-    font-size: 1.3rem;
-  }
-
-  /* Si la tarjeta se expande en móvil, los botones pueden necesitar un ajuste */
-  .person-card {
-    flex-wrap: wrap; /* Permite que el contenido se ajuste */
-    justify-content: center;
-    text-align: center;
-    padding-top: 2.5rem; /* Deja espacio para el botón de eliminar arriba */
-  }
-  .person-card__info {
-    flex-basis: 100%; /* Info ocupa todo el ancho */
-    margin-top: 0.5rem;
-  }
-  .person-card__avatar {
-    margin-bottom: 0.5rem;
-  }
-  .person-card__status {
-    position: static; /* Coloca el icono de estado de nuevo en el flujo */
-    margin-left: 0;
-    margin-top: 0.5rem;
-  }
+  /* --- YA NO NECESITAMOS REGLAS MÓVILES PARA .person-card --- */
+  /* (Hemos eliminado las reglas .person-card, .person-card__info, etc. 
+     que estaban causando el error de layout) */
 }

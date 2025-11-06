@@ -262,6 +262,53 @@
         </p>
       </footer>
     </div>
+
+    <div class="modal" id="person-modal">
+      <div class="modal__content">
+        <button class="modal__close-button" id="close-modal-button">
+          &times;
+        </button>
+        <h2 class="modal__title" id="modal-title">Agregar Persona</h2>
+        <form class="modal-form" id="person-form">
+          <input type="hidden" id="person-id" name="id" />
+          <div class="form-group">
+            <label for="person-nombre" class="form-group__label">Nombre</label>
+            <input
+              type="text"
+              id="person-nombre"
+              class="form-group__input"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="person-rol" class="form-group__label">Rol</label>
+            <select id="person-rol" class="form-group__input">
+              <option value="Residente">Residente</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Invitado">Invitado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="person-fingerprint" class="form-group__label"
+              >ID de Huella (del sensor)</label
+            >
+            <input
+              type="number"
+              id="person-fingerprint"
+              class="form-group__input"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="button button--primary"
+            id="modal-submit-button"
+          >
+            Guardar
+          </button>
+        </form>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="src/index.js" type="module"></script>
   </body>

@@ -1,0 +1,72 @@
+/* Estilo para el fondo oscuro (overlay) */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6); /* Oscurece el fondo */
+
+  /* Para centrar el contenido */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modificador para mostrar el modal */
+.modal--visible {
+  display: flex;
+}
+
+/* El contenido (la caja blanca) */
+.modal__content {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  min-width: 400px;
+  max-width: 90%;
+}
+
+/* Título del modal */
+.modal__title {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: var(--color-primary);
+}
+
+/* Botón de cerrar (la 'X') */
+.modal__close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--color-text-light);
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal__close-button:hover {
+  color: var(--color-danger);
+}
+
+/* El formulario dentro del modal */
+.modal-form .form-group__input {
+  /* Asegura que los inputs usen los colores del tema */
+  background-color: var(--color-background);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.modal-form .button--primary {
+  width: 100%;
+  margin-top: 1rem;
+}
