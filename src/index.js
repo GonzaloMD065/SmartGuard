@@ -72,7 +72,7 @@ function showView(viewId) {
   // 2. Muestra la sección solicitada
   const activeSection = document.getElementById(viewId);
   if (activeSection) {
-    activeSection.style.display = "block";
+    activeSection.style.display = "";
   }
   // 3. Actualiza la clase activa en el menú
   navLinks.forEach((link) => {

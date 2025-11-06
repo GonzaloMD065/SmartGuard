@@ -29,7 +29,7 @@
       </form>
     </div>
 
-    <div class="app-container">
+    <div class="app-container" id="app-container">
       <header class="header">
         <div class="header__logo">CerraduraApp 🔒</div>
 
@@ -72,6 +72,9 @@
             <span>🔔</span> <span class="notifications__count">3</span>
           </button>
         </div>
+        <button id="logout-button" class="button button--secondary">
+          Cerrar Sesión
+        </button>
       </header>
 
       <main class="main">
@@ -80,15 +83,15 @@
           <div class="dashboard__grid">
             <div class="card">
               <h3 class="card__title">Accesos Hoy</h3>
-              <p class="card__data">12</p>
+              <p class="card__data" data-id="accesos-hoy">12</p>
             </div>
             <div class="card">
               <h3 class="card__title">Fallidos Hoy</h3>
-              <p class="card__data">2</p>
+              <p class="card__data" data-id="fallidos-hoy">2</p>
             </div>
             <div class="card">
               <h3 class="card__title">Personas Activas</h3>
-              <p class="card__data">5</p>
+              <p class="card__data" data-id="personas-activas">5</p>
             </div>
             <div class="card card--large">
               <h3 class="card__title">Actividad Reciente (Gráfico)</h3>
@@ -109,7 +112,7 @@
                   <th>Método</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="logs-table-body">
                 <tr class="logs__row">
                   <td data-label="Fecha">29 Oct 2025, 10:20 AM</td>
                   <td data-label="Persona">Ana García</td>
@@ -142,11 +145,15 @@
         <section class="section people" id="personas">
           <h2 class="section__title">Personas Autorizadas</h2>
           <div class="people__actions">
-            <button class="button button--secondary" data-action="add-person">
+            <button
+              class="button button--secondary"
+              data-action="add-person"
+              id="add-person-button"
+            >
               ➕ Agregar Persona
             </button>
           </div>
-          <div class="people__list">
+          <div class="people__list" id="people-list">
             <article class="person-card" data-userid="1">
               <div class="person-card__avatar"></div>
               <div class="person-card__info">
