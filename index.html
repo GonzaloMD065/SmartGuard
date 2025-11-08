@@ -100,7 +100,9 @@
             </div>
             <div class="card card--large">
               <h3 class="card__title">Actividad Reciente (Gráfico)</h3>
-              <div class="card__placeholder"></div>
+              <div class="card__placeholder">
+                <canvas id="activity-chart"></canvas>
+              </div>
             </div>
           </div>
         </section>
@@ -315,6 +317,7 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="src/index.js" type="module"></script>
   </body>
 </html>

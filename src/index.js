@@ -36,6 +36,8 @@ const notificationsButton = document.getElementById("notifications-button");
 const notificationsCount = document.getElementById("notifications-count");
 const notificationsDropdown = document.getElementById("notifications-dropdown");
 
+let myActivityChart = null;
+
 // 1.5 Manejo de la sesión
 supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
@@ -46,6 +48,7 @@ supabase.auth.onAuthStateChange((event, session) => {
     loadDashboardData();
     loadPersonas();
     loadRegistros();
+    loadChartData();
     showView("dashboard"); // Muestra el dashboard por defecto
     listenToNotifications();
   } else {
@@ -338,28 +341,53 @@ async function loadRegistros() {
 }
 
 // 4.2 Cargar datos del Dashboard (Tus tarjetas)
-// Esta es una función de ejemplo, puedes hacerla tan compleja como quieras
 async function loadDashboardData() {
-  // Simplemente actualizamos las tarjetas con datos de ejemplo
-  // En un futuro, harías consultas a Supabase para obtener estos conteos
-  document.querySelector('.card__data[data-id="accesos-hoy"]').textContent =
-    "...";
-  document.querySelector('.card__data[data-id="fallidos-hoy"]').textContent =
-    "...";
+  // 1. Establecer el rango de "hoy"
+  // (Crea una fecha para hoy a las 00:00:00)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayISO = today.toISOString(); // Formato que Supabase entiende
 
-  // Ejemplo: Contar personas
-  const { count: personasCount, error } = await supabase
+  // 2. Consulta de Accesos Exitosos Hoy
+  const { count: accesosHoy, error: accesosError } = await supabase
+    .from("registros")
+    .select("*", { count: "exact", head: true }) // Solo cuenta
+    .eq("estado", "Exitoso")
+    .gte("created_at", todayISO); // gte = "mayor o igual que" hoy a las 00:00
+
+  if (accesosHoy !== null) {
+    document.querySelector('.card__data[data-id="accesos-hoy"]').textContent =
+      accesosHoy;
+  } else {
+    console.error("Error contando accesos:", accesosError);
+  }
+
+  // 3. Consulta de Accesos Fallidos Hoy
+  const { count: fallidosHoy, error: fallidosError } = await supabase
+    .from("registros")
+    .select("*", { count: "exact", head: true }) // Solo cuenta
+    .eq("estado", "Fallido")
+    .gte("created_at", todayISO);
+
+  if (fallidosHoy !== null) {
+    document.querySelector('.card__data[data-id="fallidos-hoy"]').textContent =
+      fallidosHoy;
+  } else {
+    console.error("Error contando fallidos:", fallidosError);
+  }
+
+  // 4. Consulta de Personas Activas (Esta ya la tenías y funciona)
+  const { count: personasCount, error: personasError } = await supabase
     .from("personas")
-    .select("*", { count: "exact", head: true }); // Solo cuenta, no trae datos
+    .select("*", { count: "exact", head: true });
 
-  if (personasCount) {
+  if (personasCount !== null) {
     document.querySelector(
       '.card__data[data-id="personas-activas"]'
     ).textContent = personasCount;
+  } else {
+    console.error("Error contando personas:", personasError);
   }
-
-  // (Asegúrate de añadir 'data-id' a tus <p class="card__data"> en el HTML)
-  // Ej: <p class="card__data" data-id="personas-activas">5</p>
 }
 
 // --- BLOQUE 5: LÓGICA DE DESBLOQUEO (TECLADO) ---
@@ -509,6 +537,103 @@ function addNotification(message, isAlert = false) {
   setTimeout(() => {
     notificationsCount.classList.remove("notifications__count--new");
   }, 300);
+
+  loadDashboardData();
+  loadChartData();
+}
+
+// --- BLOQUE 7: LÓGICA DEL GRÁFICO (NUEVO) ---
+
+async function loadChartData() {
+  // 1. Llama a la función RPC que creamos en Supabase
+  const { data, error } = await supabase.rpc(
+    "get_activity_summary_last_7_days"
+  );
+
+  if (error) {
+    console.error("Error cargando datos del gráfico:", error);
+    return;
+  }
+
+  // 2. Procesa los datos para que Chart.js los entienda
+  const labels = []; // Eje X: Los días (ej: "Nov 5", "Nov 6")
+  const successData = []; // Datos de Éxito
+  const failedData = []; // Datos de Fallo
+
+  // Usamos un Map para agrupar los datos por día
+  const dataMap = new Map();
+  data.forEach((item) => {
+    const day = new Date(item.dia_registro).toLocaleDateString("es-MX", {
+      month: "short",
+      day: "numeric",
+    });
+    if (!dataMap.has(day)) {
+      dataMap.set(day, { Exitoso: 0, Fallido: 0 });
+    }
+    // Asigna el conteo al estado correspondiente (Exitoso o Fallido)
+    if (dataMap.get(day)[item.estado] !== undefined) {
+      dataMap.get(day)[item.estado] = item.conteo;
+    }
+  });
+
+  // Convertimos el Map a los arrays que Chart.js necesita
+  dataMap.forEach((values, day) => {
+    labels.push(day);
+    successData.push(values.Exitoso);
+    failedData.push(values.Fallido);
+  });
+
+  // 3. Dibuja el gráfico
+  const ctx = document.getElementById("activity-chart").getContext("2d");
+
+  // Si el gráfico ya existe, destrúyelo para volver a dibujarlo
+  if (myActivityChart) {
+    myActivityChart.destroy();
+  }
+
+  myActivityChart = new Chart(ctx, {
+    type: "bar", // Tipo de gráfico
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Éxitoso",
+          data: successData,
+          backgroundColor: "rgba(40, 167, 69, 0.7)", // Verde
+          borderColor: "rgba(40, 167, 69, 1)",
+          borderWidth: 1,
+        },
+        {
+          label: "Fallido",
+          data: failedData,
+          backgroundColor: "rgba(220, 53, 69, 0.7)", // Rojo
+          borderColor: "rgba(220, 53, 69, 1)",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          ticks: { color: "#fff" }, // Color de texto eje X
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: "#fff", // Color de texto eje Y
+            stepSize: 1, // Asegura que el conteo sea en enteros (1, 2, 3)
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          labels: { color: "#fff" }, // Color de la leyenda
+        },
+      },
+    },
+  });
 }
 
 // Inicializa la primera vista (será anulado por el onAuthStateChange)
