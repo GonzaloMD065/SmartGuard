@@ -32,6 +32,10 @@ const personNombreInput = document.getElementById("person-nombre");
 const personRolInput = document.getElementById("person-rol");
 const personFingerprintInput = document.getElementById("person-fingerprint");
 
+const notificationsButton = document.getElementById("notifications-button");
+const notificationsCount = document.getElementById("notifications-count");
+const notificationsDropdown = document.getElementById("notifications-dropdown");
+
 // 1.5 Manejo de la sesión
 supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
@@ -43,6 +47,7 @@ supabase.auth.onAuthStateChange((event, session) => {
     loadPersonas();
     loadRegistros();
     showView("dashboard"); // Muestra el dashboard por defecto
+    listenToNotifications();
   } else {
     // Usuario no ha iniciado sesión
     loginPage.style.display = "flex";
@@ -425,6 +430,85 @@ async function submitCode() {
   currentCode = "";
   updateKeypadDisplay();
   loadRegistros(); // Recarga los logs
+}
+
+// --- BLOQUE 6: LÓGICA DE NOTIFICACIONES (NUEVO) ---
+
+let newNotificationCount = 0;
+
+// 6.1 Event listener para el botón de la campana
+notificationsButton.addEventListener("click", () => {
+  // Muestra/oculta el dropdown
+  notificationsDropdown.classList.toggle("notifications__dropdown--visible");
+
+  // Resetea el contador al abrir
+  newNotificationCount = 0;
+  notificationsCount.textContent = newNotificationCount;
+  notificationsCount.classList.remove("notifications__count--new");
+});
+
+// 6.2 Función principal para "escuchar"
+function listenToNotifications() {
+  console.log("Activando listener de notificaciones...");
+
+  // Escuchar NUEVOS REGISTROS (accesos)
+  const registrosChannel = supabase
+    .channel("public:registros")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "registros" },
+      (payload) => {
+        console.log("Nuevo registro detectado:", payload.new);
+        // Formatea el mensaje y añádelo
+        const log = payload.new;
+        const nombre = log.detalles || "Alguien";
+        const mensaje = `${nombre} ${
+          log.estado === "Exitoso" ? "accedió con éxito" : "falló al acceder"
+        }.`;
+
+        addNotification(mensaje, log.estado === "Fallido");
+      }
+    )
+    .subscribe();
+
+  // Escuchar NUEVAS PERSONAS (usuarios)
+  const personasChannel = supabase
+    .channel("public:personas")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "personas" },
+      (payload) => {
+        console.log("Nueva persona detectada:", payload.new);
+        const mensaje = `Se agregó un nuevo usuario: ${payload.new.nombre}.`;
+        addNotification(mensaje, false);
+      }
+    )
+    .subscribe();
+}
+
+// 6.3 Función helper para añadir la notificación a la UI
+function addNotification(message, isAlert = false) {
+  // 1. Crear el elemento HTML
+  const item = document.createElement("div");
+  item.classList.add("notification-item");
+  if (isAlert) {
+    item.classList.add("notification-item--alert");
+  }
+  item.textContent = message;
+
+  // 2. Añadirlo al principio del dropdown
+  notificationsDropdown.prepend(item);
+
+  // 3. Actualizar el contador
+  newNotificationCount++;
+  notificationsCount.textContent = newNotificationCount;
+
+  // 4. Hacer "vibrar" el ícono
+  notificationsCount.classList.add("notifications__count--new");
+  // Quitar la vibración después de la animación
+  setTimeout(() => {
+    notificationsCount.classList.remove("notifications__count--new");
+  }, 300);
 }
 
 // Inicializa la primera vista (será anulado por el onAuthStateChange)
